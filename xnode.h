@@ -4,20 +4,22 @@
 #include <stdio.h>
 #include <vector>
 
-template <typename T>
 class xNode {
 private:
   bool isLeaf;
-  int batch;
   int maxChildren;
-  T data;
-  std::vector<xNode> children;
+  int data;
+  int* keys;
+  std::vector<xNode>* children;
 
 public:
   /* Constructors */
   xNode();
-  xNode(T initialData);
-  xNode(T initialData, int identifier);
+  xNode(int initialData);
+  xNode(int initialData, int identifier);
+
+  xNode(int* initialData);
+  xNode(int* initialData, int identifier);
 
   /* Setters */
   int setId(int identifier);

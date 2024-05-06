@@ -3,36 +3,29 @@
 
 /**! xNode **/
 /* Constructors */
-template <typename T>
-xNode<T>::xNode(T initialData) : xNode(initialData, -1) {}
-
-template <typename T>
-xNode<T>::xNode(T initialData, int identifier) : data(initialData), batch(identifier) {
-  children = new std::vector<xNode<T>>();
+xNode::xNode(int initialData, int identifier) : data(initialData) {
+  children = new std::vector<xNode>();
 }
 
+xNode::xNode(int initialData) : xNode(initialData, -1) {}
+
 /* Displays */
-template<typename T>
-void xNode<T>::showDetails() {
-  printf("Node: %d\n", batch);
+void xNode::showDetails() {
+  printf("Node: %d\n", data);
   printf("\t%10s:%s\n", "MaxChild", maxChildren);
-  printf("\t%10s:%s\n", "Children", children.size());
+  printf("\t%10s:%s\n", "Children", children->size());
 }
 
 /* Setters */
-template <typename T>
-int xNode<T>::setId(int identifier) { batch = identifier; return batch; }
+int xNode::setId(int identifier) { data = identifier; return data; }
 
 /* Getters */
-template <typename T>
-int xNode<T>::getId() { return batch; }
+int xNode::getId() { return data; }
 
 /* Children */
-template <typename T>
-bool xNode<T>::hasChildren() { return (children.size() > 0); }
+bool xNode::hasChildren() { return (children->size() > 0); }
 
 /* DeConstructor */
-template <typename T>
-xNode<T>::~xNode() {
-  children.clear();
+xNode::~xNode() {
+  children->clear();
 }

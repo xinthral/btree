@@ -1,0 +1,292 @@
+#include <vector>
+#include <iostream>
+
+template <typename T>
+class BTreeNode {
+private:
+    std::vector<T> keys;             // Vector to store keys
+    std::vector<BTreeNode*> children; // Vector to store child pointers
+    bool leaf;                       // Flag to indicate if the node is a leaf
+    int degree;                      // Degree of the B-tree node
+    int numKeys;                     // Number of keys currently in the node
+
+public:
+    // Constructor
+    BTreeNode(int _degree, bool _leaf);
+
+    // Destructor
+    ~BTreeNode();
+
+    // Function to search key in subtree rooted with this node
+    BTreeNode* search(T key);
+
+    // Function to traverse all nodes in a subtree rooted with this node
+    void traverse();
+
+    // Function to split the child of this node
+    void splitChild(int index, BTreeNode* child);
+
+    // Function to insert a new key in this node
+    void insertNonFull(T key);
+
+    // Function to remove a key from this node
+    void remove(T key);
+
+    // A utility function to find the key at a given index
+    T getKey(int index);
+
+    // A utility function to return the index of the first key that is
+    // greater than or equal to key
+    int findKey(T key);
+
+    // A friend function to allow the BTree class to access private members
+    friend class BTree;
+};
+
+template <typename T>
+class BTree {
+private:
+  BTreeNode<T>* root;
+
+public:
+  // Constructor
+  BTree(int degree) {
+    root = nullptr;
+  }
+
+  // Destructor
+  ~BTree() {
+    // Cleanup resources
+    destroyTree(root);
+  }
+
+  // Function to insert a key into the B-tree
+  void insert(T key);
+
+  // Function to remove a key from the B-tree
+  void remove(T key);
+
+  // Function to search for a key in the B-tree
+  bool search(T key);
+
+  // Function to traverse the B-tree
+  void traverse();
+
+private:
+  // Utility function to destroy the B-tree recursively
+  void destroyTree(BTreeNode<T>* node);
+};
+
+template <typename T>
+BTreeNode<T>::BTreeNode(int _degree, bool _leaf) : degree(_degree), leaf(_leaf), numKeys(0) {
+    keys.resize(2 * degree - 1);
+    children.resize(2 * degree);
+};
+
+template <typename T>
+BTreeNode<T>::~BTreeNode() {}
+
+template <typename T>
+BTreeNode<T>* BTreeNode<T>::search(T key) {
+    int i = 0;
+    while (i < numKeys && key > keys[i])
+        ++i;
+
+    if (keys[i] == key)
+        return this;
+
+    if (leaf)
+        return nullptr;
+
+    return children[i]->search(key);
+};
+
+template <typename T>
+void BTreeNode<T>::traverse() {
+    int i;
+    for (i = 0; i < numKeys; ++i) {
+        if (!leaf)
+            children[i]->traverse();
+        std::cout << " " << keys[i];
+    }
+
+    if (!leaf)
+        children[i]->traverse();
+};
+
+template <typename T>
+void BTreeNode<T>::splitChild(int index, BTreeNode<T>* child) {
+    BTreeNode<T>* newChild = new BTreeNode<T>(child->degree, child->leaf);
+    newChild->numKeys = degree - 1;
+
+    for (int i = 0; i < degree - 1; ++i)
+        newChild->keys[i] = child->keys[i + degree];
+
+    if (!child->leaf) {
+        for (int i = 0; i < degree; ++i)
+            newChild->children[i] = child->children[i + degree];
+    }
+
+    child->numKeys = degree - 1;
+
+    for (int i = numKeys; i >= index + 1; --i)
+        children[i + 1] = children[i];
+
+    children[index + 1] = newChild;
+
+    for (int i = numKeys - 1; i >= index; --i)
+        keys[i + 1] = keys[i];
+
+    keys[index] = child->keys[degree - 1];
+
+    numKeys++;
+};
+
+template <typename T>
+void BTreeNode<T>::insertNonFull(T key) {
+    int i = numKeys - 1;
+
+    if (leaf) {
+        while (i >= 0 && keys[i] > key) {
+            keys[i + 1] = keys[i];
+            --i;
+        }
+
+        keys[i + 1] = key;
+        numKeys++;
+    } else {
+        while (i >= 0 && keys[i] > key)
+            --i;
+
+        if (children[i + 1]->numKeys == 2 * degree - 1) {
+            splitChild(i + 1, children[i + 1]);
+            if (keys[i + 1] < key)
+                ++i;
+        }
+        children[i + 1]->insertNonFull(key);
+    }
+};
+
+template <typename T>
+void BTreeNode<T>::remove(T key) {
+    int idx = findKey(key);
+
+    if (idx < numKeys && keys[idx] == key) {
+        if (leaf)
+            ;
+        else {
+            ;
+        }
+    } else {
+        if (leaf) {
+            std::cout << "The key " << key << " does not exist in the tree\n";
+            return;
+        }
+
+        bool flag = ((idx == numKeys) ? true : false);
+
+        if (children[idx]->numKeys < degree)
+            ;
+
+        if (flag && idx > numKeys)
+            children[idx - 1]->remove(key);
+        else
+            children[idx]->remove(key);
+    }
+};
+
+template <typename T>
+T BTreeNode<T>::getKey(int index) {
+    return keys[index];
+};
+
+template <typename T>
+int BTreeNode<T>::findKey(T key) {
+    int index = 0;
+    while (index < numKeys && keys[index] < key)
+        ++index;
+    return index;
+};
+
+
+// Include the BTreeNode class definition here...
+
+
+
+// Implement member functions of BTree class here...
+
+template <typename T>
+void BTree<T>::insert(T key) {
+  if (!root) {
+    root = new BTreeNode<T>(degree, true);
+    root->keys[0] = key;
+    root->numKeys = 1;
+  } else {
+    if (root->numKeys == 2 * degree - 1) {
+      BTreeNode<T>* newRoot = new BTreeNode<T>(degree, false);
+      newRoot->children[0] = root;
+      newRoot->splitChild(0, root);
+      int i = 0;
+      if (newRoot->keys[0] < key)
+        ++i;
+      newRoot->children[i]->insertNonFull(key);
+      root = newRoot;
+    } else {
+      root->insertNonFull(key);
+    }
+  }
+};
+
+template <typename T>
+void BTree<T>::remove(T key) {
+  // Implement removal logic here...
+};
+
+template <typename T>
+bool BTree<T>::search(T key) {
+  if (!root)
+      return false;
+  return (root->search(key) != nullptr);
+};
+
+template <typename T>
+void BTree<T>::traverse() {
+  if (root)
+    root->traverse();
+  std::cout << std::endl;
+};
+
+template <typename T>
+void BTree<T>::destroyTree(BTreeNode<T>* node) {
+  if (node) {
+    for (int i = 0; i < node->numKeys; ++i) {
+      if (!node->leaf)
+        destroyTree(node->children[i]);
+    }
+    delete node;
+  }
+};
+
+int main() {
+  // Create a B-tree with degree 3
+  BTree<int> btree(3);
+
+  // Insert some keys
+  btree.insert(10);
+  btree.insert(20);
+  btree.insert(5);
+  btree.insert(6);
+  btree.insert(12);
+  btree.insert(30);
+  btree.insert(7);
+
+  // Print the B-tree
+  std::cout << "B-tree traversal: ";
+  btree.traverse();
+
+  // Search for keys
+  std::cout << "Search for key 6: " << (btree.search(6) ? "Found" : "Not Found") << std::endl;
+  std::cout << "Search for key 25: " << (btree.search(25) ? "Found" : "Not Found") << std::endl;
+
+  return 0;
+}

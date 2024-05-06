@@ -35,17 +35,17 @@ CXXFLAGS = $(CXFLAGS) -Wall -pedantic -O3
 # SOURCES := $(patsubst %.cpp,%.o, $(wildcard *.cpp))
 
 # The build target
-# EXECUTABLE = main
+EXEC = main
 TREE = xtree
 MOD1 = xnode
 
 # Compile Full porgram
-btree: $(MOD1).o $(TREE).o
-	$(CC) $(CXFLAGS) $^ -o $@.exe
+btree: $(MOD1).o $(TREE).o launcher.cpp
+	$(CC) $(CXFLAGS) $^ -o $(EXEC).exe
 
 # Template function to compile defined objects files
 # Dynamically assign *.o to be compiled from its source counterpart
-%.o: %.cpp %.h
+%.o: %.cpp
 	$(CC) $(CXFLAGS) -c $< -o $@
 
 clean:

@@ -7,7 +7,8 @@ class xTree {
 private:
   xNode* root;
 public:
-  xTree(xNode* baseNode);
+  xTree(xNode*);
+  void displayRoot();
 };
 
 #endif // XTREE_H //

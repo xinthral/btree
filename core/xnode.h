@@ -7,7 +7,7 @@
 class xNode {
 private:
   bool isLeaf;
-  int maxChildren;
+  int maxKeys;
   int data;
   int* keys;
   std::vector<xNode>* children;

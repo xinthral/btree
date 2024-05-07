@@ -3,7 +3,7 @@
 
 /**! xNode **/
 /* Constructors */
-xNode::xNode(int initialData, int identifier) : data(initialData) {
+xNode::xNode(int initialData, int identifier) : data(initialData), maxKeys(5) {
   children = new std::vector<xNode>();
 }
 
@@ -12,8 +12,8 @@ xNode::xNode(int initialData) : xNode(initialData, -1) {}
 /* Displays */
 void xNode::showDetails() {
   printf("Node: %d\n", data);
-  printf("\t%10s:%s\n", "MaxChild", maxChildren);
-  printf("\t%10s:%s\n", "Children", children->size());
+  printf("  MaxKeys:  %d\n", maxKeys);
+  printf("  Children: %d\n", children->size());
 }
 
 /* Setters */

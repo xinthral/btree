@@ -16,14 +16,14 @@ int main(int argc, char const *argv[]) {
   // xNode* root = new xNode(0, -1);
   // xTree tree(root);
   xList* llist = new xList(10);
-  for (int i = 0; i < 9; i++) { llist->insert(i, i+1); }
+  for (int i = 0; i < 10; i++) { llist->insert(i, i); }
   llist->display();
 
   /* Simulated Work Delay */
   std::this_thread::sleep_for(std::chrono::milliseconds(seconds * 1000));
 
   /* Actual Work Delay */
-  llist->remove(5);
+  llist->insert(32, -1);
 
   /* Respective Outputs */
   // root->showDetails();

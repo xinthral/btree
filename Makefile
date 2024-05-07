@@ -7,10 +7,13 @@
 
 # the compiler: gcc for C programs, g++ for C++ programs
 CC = g++
+SEPR=/
 
 # Windows Variants
 ifeq ($(OS), Windows_NT)
 RM=del
+SEPR=\\
+
 endif
 
 # https://gcc.gnu.org/onlinedocs/gcc/Warning-Options.html
@@ -31,16 +34,26 @@ CXFLAGS = $(CFLAGS) -std=c++20
 # Extra Compiler Options
 CXXFLAGS = $(CXFLAGS) -Wall -pedantic -O3
 
+# The build target
+EXEC = run
+MOD1 = xlist
+MOD2 = xnode
+MOD3 = xtree
+
 # find *.cpp files and make a list of *.o files
 # SOURCES := $(patsubst %.cpp,%.o, $(wildcard *.cpp))
-
-# The build target
-EXEC = main
-TREE = xtree
-MOD1 = xnode
+CORE := core
+CORESRC := $(patsubst $(CORE)/%.cpp, $(CORE)/%.o, $(wildcard $(CORE)/*.cpp))
+LNCH := launcher
+LNCHSRC := $(patsubst $(LNCH)/%.cpp, $(LNCH)/%.o, $(wildcard $(LNCH)/*.cpp))
+TEST := test
+TESTSRC := $(patsubst $(TEST)/%.cpp, $(TEST)/%.o, $(wildcard $(TEST)/*.cpp))
 
 # Compile Full porgram
-btree: $(MOD1).o $(TREE).o launcher.cpp
+program: $(CORESRC) $(LNCHSRC)
+	$(CC) $(CXFLAGS) $^ -o $(EXEC).exe
+
+test: $(CORESRC) $(TESTSRC)
 	$(CC) $(CXFLAGS) $^ -o $(EXEC).exe
 
 # Template function to compile defined objects files
@@ -49,4 +62,16 @@ btree: $(MOD1).o $(TREE).o launcher.cpp
 	$(CC) $(CXFLAGS) -c $< -o $@
 
 clean:
-	$(RM) *.o *.exe
+	$(MAKE) cleancore
+	$(MAKE) cleanlnch
+	$(MAKE) cleantest
+	$(RM) *.exe
+
+cleancore:
+	$(RM) $(CORE)$(SEPR)*.o
+
+cleanlnch:
+	$(RM) $(LNCH)$(SEPR)*.o
+
+cleantest:
+	$(RM) $(TEST)$(SEPR)*.o

@@ -1,39 +1,21 @@
-#include "t_xlist.h"
-#include "t_xnode.h"
+#include <stdio.h>
+#include <time.h>
 #include "t_xtree.h"
 
 class xTest {
 private:
-  xList* list;
-  xNode* node;
-  xTree* tree;
+  t_xTree* tree;
 
 public:
   xTest() { test_all(); }
-
-  void test_all() {
-    test_xlist();
-    test_xnode();
-    test_xtree();
-  }
-
-  void test_xlist() {
-    list = new xList(10);
-    list->display();
-  }
-
-  void test_xnode() {
-    node = new xNode(10);
-    node->showDetails();
-  }
-
-  void test_xtree() {
-    tree = new xTree(node);
-    tree->displayRoot();
-  }
+  void test_all() { test_xtree(); }
+  void test_xtree() { tree = new t_xTree(); }
 };
 
 int main(int argc, char const *argv[]) {
+  int seconds = 2;
+  time_t start = time(NULL);
   xTest* testing = new xTest();
+  printf("Tasks Completed: %f\n", difftime(time(NULL), start));
   return 0;
 }

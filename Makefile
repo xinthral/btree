@@ -26,7 +26,7 @@ endif
 #  -no-pie  - do not produce a position-independent executable
 #  -fPIC    - Format position-independent code
 # Standard Compiler Options
-CFLAGS = -g -Wno-format -Wno-sign-compare
+CFLAGS = -g -Wno-format -Wno-sign-compare -Wno-conversion-null
 
 # Extended Compiler Options
 CXFLAGS = $(CFLAGS) -std=c++20
@@ -36,9 +36,7 @@ CXXFLAGS = $(CXFLAGS) -Wall -pedantic -O3
 
 # The build target
 EXEC = run
-MOD1 = xlist
-MOD2 = xnode
-MOD3 = xtree
+MOD1 = xtree
 
 # find *.cpp files and make a list of *.o files
 # SOURCES := $(patsubst %.cpp,%.o, $(wildcard *.cpp))

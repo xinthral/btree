@@ -26,7 +26,7 @@ endif
 #  -no-pie  - do not produce a position-independent executable
 #  -fPIC    - Format position-independent code
 # Standard Compiler Options
-CFLAGS = -g -Wno-format -Wno-sign-compare -Wno-conversion-null
+CFLAGS = -g -Wno-format -Wno-sign-compare -Wno-conversion-null -Wno-return-type
 
 # Extended Compiler Options
 CXFLAGS = $(CFLAGS) -std=c++20

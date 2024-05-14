@@ -26,6 +26,8 @@ public:
 
   xNode* inOrderSearch(struct xNode * node, int criteria);
   void inOrderDisplay(struct xNode * node);
+  void preOrderDisplay(struct xNode* node);
+  void postOrderDisplay(struct xNode* node);
 };
 
 #endif // XTREE_H //

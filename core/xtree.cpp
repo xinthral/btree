@@ -5,17 +5,37 @@ xTree::xTree(int order) : _order(order) {
   _root = nullptr;
 }
 
+int xTree::height(xNode* node) {
+  if (node == nullptr) { return 0; }
+  return node->_height;
+}
+
+int xTree::maximum(int primary, int secondary) {
+  return (primary > secondary) ? primary : secondary;
+}
+
+int xTree::getBalance(xNode* node) {
+  if (node == nullptr) { return 0; }
+  return height(node->_lchild) - height(node->_rchild);
+}
+
+xNode* xTree::getRoot() {
+  return _root;
+}
+
 xNode* xTree::createNode(int key) {
   xNode* newNode = new xNode();
   newNode->_key = key;
   newNode->_lchild = nullptr;
   newNode->_rchild = nullptr;
-  newNode->_height = -1;
+  newNode->_height = 0;
   return newNode;
 }
 
-xNode* xTree::getRoot() {
-  return _root;
+xNode* xTree::search(int key) {
+  if (_root == nullptr) { return nullptr; }
+  xNode * node = inOrderSearch(_root, key);
+  return node;
 }
 
 xNode* xTree::insert(xNode* node, int key) {
@@ -58,9 +78,8 @@ xNode* xTree::insert(xNode* node, int key) {
     // RL Case
     if (balance < -1 && key < node->_rchild->_key) {
       node->_rchild = rotateRight(node->_rchild);
-      return rotateRight(node); 
+      return rotateLeft(node); 
     }
-
     return node;
   }
 }
@@ -72,10 +91,28 @@ void xTree::remove(int key) {
   // Delete key from node
 }
 
-xNode* xTree::search(int key) {
-  if (_root == nullptr) { return nullptr; }
-  xNode * node = inOrderSearch(_root, key);
-  return node;
+xNode* xTree::rotateLeft(xNode * node) {
+  xNode *node1 = node->_rchild;
+  // Rotate nodes
+  node->_rchild = node1->_lchild;
+  node1->_lchild = node;
+
+  // Update heights
+  node->_height = maximum(height(node->_lchild), height(node->_rchild)) + 1;
+  node1->_height = maximum(height(node1->_lchild), height(node1->_rchild)) + 1;
+  return node1;
+}
+
+xNode* xTree::rotateRight(xNode * node) {
+  xNode *node1 = node->_lchild;
+  // Rotate nodes
+  node->_lchild = node1->_rchild;
+  node1->_rchild = node;
+
+  // Update heights
+  node->_height = maximum(height(node->_lchild), height(node->_rchild)) + 1;
+  node1->_height = maximum(height(node1->_lchild), height(node1->_rchild)) + 1;
+  return node1;
 }
 
 xNode* xTree::inOrderSearch(struct xNode* node, int criteria) {
@@ -88,49 +125,23 @@ xNode* xTree::inOrderSearch(struct xNode* node, int criteria) {
 void xTree::inOrderDisplay(struct xNode * node) {
   if (node != nullptr && node->_key > -1) {
     inOrderDisplay(node->_lchild);
-    printf("%d ", node->_key);
+    printf("%d, ", node->_key);
     inOrderDisplay(node->_rchild);
   }
 }
 
-int xTree::height(xNode* node) {
-  if (node == nullptr) { return 0; }
-  return node->_height;
+void xTree::preOrderDisplay(struct xNode* node) {
+  if (node != nullptr && node->_key > -1) {
+    printf("%d, ", node->_key);
+    preOrderDisplay(node->_lchild);
+    preOrderDisplay(node->_rchild);
+  }
 }
 
-int xTree::maximum(int primary, int secondary) {
-  return (primary > secondary) ? primary : secondary;
-}
-
-int xTree::getBalance(xNode* node) {
-  if (node == nullptr) { return 0; }
-  return height(node->_lchild) - height(node->_rchild);
-}
-
-xNode* xTree::rotateLeft(xNode * node) {
-  xNode *node1 = node->_lchild;
-  xNode *node2 = node->_rchild;
-  
-  // Rotate nodes
-  node1->_lchild = node;
-  node->_rchild = node2;
-  
-  // Update heights
-  node->_height = maximum(height(node->_lchild), height(node->_rchild)) + 1;
-  node1->_height = maximum(height(node1->_lchild), height(node1->_rchild)) + 1;
-  return node1;
-}
-
-xNode* xTree::rotateRight(xNode * node) {
-  xNode *node1 = node->_lchild;
-  xNode *node2 = node->_rchild;
-
-  // Rotate nodes
-  node1->_rchild = node;
-  node->_lchild = node2;
-
-  // Update heights
-  node->_height = maximum(height(node->_lchild), height(node->_rchild)) + 1;
-  node1->_height = maximum(height(node1->_lchild), height(node1->_rchild)) + 1;
-  return node1;
+void xTree::postOrderDisplay(struct xNode* node) {
+  if (node != nullptr && node->_key > -1) {
+    postOrderDisplay(node->_lchild);
+    postOrderDisplay(node->_rchild);
+    printf("%d, ", node->_key);
+  }
 }

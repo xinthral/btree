@@ -9,7 +9,7 @@
 int main(int argc, char const *argv[]) {
   /* Configurations */
   int seconds = 2;
-  int maximum = 50;
+  int maximum = 15;
   time_t start = time(NULL);
   std::srand(start);
 
@@ -18,7 +18,7 @@ int main(int argc, char const *argv[]) {
   xNode* root = tree->getRoot();
 
   /* Simulated Work Delay */
-  std::this_thread::sleep_for(std::chrono::milliseconds(seconds * 1000));
+  // std::this_thread::sleep_for(std::chrono::milliseconds(seconds * 1000));
 
   /* Actual Work Delay */
   int step = 0;

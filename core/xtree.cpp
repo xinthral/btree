@@ -15,6 +15,7 @@ int xTree::maximum(int primary, int secondary) {
 }
 
 int xTree::getBalance(xNode* node) {
+  // Check if children exists and returns the difference
   if (node == nullptr) { return 0; }
   return height(node->_lchild) - height(node->_rchild);
 }
@@ -84,11 +85,47 @@ xNode* xTree::insert(xNode* node, int key) {
   }
 }
 
-void xTree::remove(int key) {
-  // Search for key in tree
-  xNode* node = search(key);
-  if (node == nullptr) { return; }
-  // Delete key from node
+xNode* xTree::remove(xNode * node, int key) {
+  if (node == nullptr) { return nullptr; }              // End if node empty
+
+  /* 1. Perform the normal BST insertion */
+  if (node->isLeaf()) { return (node = nullptr); }
+  else {
+    if (key < node->_key) {                             // Swap Left Child
+      node->_lchild = remove(node->_lchild, key);
+      return node;
+    } else if (key > node->_key) {                      // Swap Right Child
+      node->_rchild = remove(node->_rchild, key);
+      return node;
+    } else if (key == node->_key) {
+      printf("Duplicate entry: %s\n", node->_key);
+    }
+
+    if (!node->_lchild) {
+      xNode* temp = node->_lchild;
+      delete node;
+      return temp;
+    } else if (!node->_rchild) {
+      xNode* temp = node->_rchild;
+      delete node;
+      return temp;
+    }
+
+    xNode* parent = node;
+    xNode* successor = node->_rchild;
+    while (successor->_lchild) {
+      parent = successor;
+      successor = successor->_lchild;
+    }
+
+    node->_key = successor->_key;
+
+    if (parent->_lchild == successor) { parent->_lchild = successor->_rchild; }
+    else { parent->_rchild = successor->_rchild; }
+
+    delete successor;
+    return node;
+  }
 }
 
 xNode* xTree::rotateLeft(xNode * node) {

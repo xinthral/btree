@@ -20,7 +20,7 @@ public:
 
   xNode* createNode(int key);
   xNode* insert(xNode* node, int key);
-  void remove(int key);
+  xNode* remove(xNode* node, int key);
   xNode* rotateRight(xNode* node);
   xNode* rotateLeft(xNode* node);
 

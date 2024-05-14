@@ -8,8 +8,11 @@ struct xNode {
   int _height;
   xNode* _lchild;
   xNode* _rchild;
-  bool _leaf;
+  bool isLeaf() { return !_lchild && !_rchild; };
+  bool isParent() { return _lchild && _rchild; }
 };
+
+
 
 // class xDate {
 // private:

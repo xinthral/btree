@@ -41,14 +41,14 @@ xNode* xTree::search(int key) {
 
 xNode* xTree::insert(xNode* node, int key) {
   if (_root == nullptr) {   // If tree empty, make new node root
-    printf("Root Added: %d\n", key);
+    // printf("Root Added: %d\n", key);
     _root = createNode(key);
     return _root;
   } else {                  // Traverse Tree for insertion
 
     /* 1. Perform the normal BST insertion */
     if (node == nullptr) {
-      printf("Node Empty, creating new: %d\n", key);
+      // printf("Node Empty, creating new: %d\n", key);
       return createNode(key);
     }
     if (key < node->_key) { node->_lchild = insert(node->_lchild, key); } 

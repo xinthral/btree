@@ -9,7 +9,7 @@
 int main(int argc, char const *argv[]) {
   /* Configurations */
   int seconds = 2;
-  int maximum = 15;
+  int maximum = 50;
   time_t start = time(NULL);
   std::srand(start);
 
